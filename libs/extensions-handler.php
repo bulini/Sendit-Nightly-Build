@@ -1,5 +1,79 @@
-<?php 
-/**/
+	<?php 
+add_action( 'init', 'register_cpt_sendit_subscriber' );
+
+function register_cpt_sendit_subscriber() {
+
+    $labels = array( 
+        'name' => _x( 'Subscribers', 'sendit_subscriber' ),
+        'singular_name' => _x( 'Subscriber', 'sendit_subscriber' ),
+        'add_new' => _x( 'Add New', 'sendit_subscriber' ),
+        'add_new_item' => _x( 'Add New Subscriber', 'sendit_subscriber' ),
+        'edit_item' => _x( 'Edit Subscriber', 'sendit_subscriber' ),
+        'new_item' => _x( 'New Subscriber', 'sendit_subscriber' ),
+        'view_item' => _x( 'View Subscriber', 'sendit_subscriber' ),
+        'search_items' => _x( 'Search Subscribers', 'sendit_subscriber' ),
+        'not_found' => _x( 'No subscribers found', 'sendit_subscriber' ),
+        'not_found_in_trash' => _x( 'No subscribers found in Trash', 'sendit_subscriber' ),
+        'parent_item_colon' => _x( 'Parent Subscriber:', 'sendit_subscriber' ),
+        'menu_name' => _x( 'Subscribers', 'sendit_subscriber' ),
+    );
+
+    $args = array( 
+        'labels' => $labels,
+        'hierarchical' => false,
+        
+        'supports' => array( 'title', 'custom-fields' ),
+        'taxonomies' => array( 'mailing lists' ),
+        'public' => true,
+        'show_ui' => true,
+        'show_in_menu' => true,
+        'menu_position' => 20,
+        
+        'show_in_nav_menus' => true,
+        'publicly_queryable' => true,
+        'exclude_from_search' => false,
+        'has_archive' => true,
+        'query_var' => true,
+        'can_export' => true,
+        'rewrite' => true,
+        'capability_type' => 'post'
+    );
+
+    register_post_type( 'sendit_subscriber', $args );
+}
+
+
+add_filter( 'manage_edit-sendit_subscriber_columns', 'sendit_edit_subscriber_columns' ) ;
+
+function sendit_edit_subscriber_columns( $columns ) {
+	
+	$sendit_morefields=get_option('sendit_dynamic_settings');
+ 	$arr=json_decode($sendit_morefields);
+	//print_r($arr);
+	if(!empty($arr)): 
+	$columns = array(
+		'cb' => '<input type="checkbox" />',
+		'title' => __( 'Email' ),
+		'date' => __( 'Subscription Date' )
+
+	);
+		$morecolums[]=array('cb' => '');
+ 		foreach($arr as $k=>$v):		
+			$morecolums[]=$v->name;
+			//$allcolumns[]=array_merge($columns,$morecolums);
+		endforeach;
+	endif;
+
+
+
+
+
+	$allcolumns=array_merge($columns,$morecolums);
+	return $allcolumns;
+	
+}
+
+
 
 function sendit_custom_post_type_init() 
 {
