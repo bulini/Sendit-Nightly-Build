@@ -1276,7 +1276,8 @@ function gestisci_menu() {
 	{
 		add_submenu_page(__FILE__, __('Fields list', 'sendit'), __('Fields settings', 'sendit'), 8, 'sendit_morefields_settings', 'sendit_morefields_screen');
 	}
- 
+ 	
+ 	add_submenu_page(__FILE__, __('Mailing list migration', 'sendit'), __('Mailing list migration', 'sendit'), 8, 'sendit_list_migration', 'sendit_list_migration');  
 
     add_submenu_page(__FILE__, __('SMTP settings', 'sendit'), __('SMTP settings', 'sendit'), 8, 'sendit_smtp_settings', 'SmtpSettings');  
     
@@ -1387,6 +1388,19 @@ function GetSenditField($json,$fieldname)
 		endif;
 	endforeach;
 	
+}
+
+function sendit_list_migration()
+{
+	require_once('migrations.php');
+	echo '<div class="wrap">
+			<h2>'.__('Mailing list migration').'</h2>';
+	if($_GET['migration']==1):
+		$migrations=new Migrations();
+		$migrations->MigrateLists();
+	endif;
+			
+	echo '</div>';
 }
 
 

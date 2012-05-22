@@ -1,4 +1,4 @@
-	<?php 
+<?php 
 add_action( 'init', 'register_cpt_sendit_subscriber' );
 
 function register_cpt_sendit_subscriber() {
@@ -23,11 +23,11 @@ function register_cpt_sendit_subscriber() {
         'hierarchical' => false,
         
         'supports' => array( 'title', 'custom-fields' ),
-        'taxonomies' => array( 'mailing lists' ),
+        'taxonomies' => array( 'mailing_lists' ),
         'public' => true,
         'show_ui' => true,
         'show_in_menu' => true,
-        'menu_position' => 20,
+        'menu_position' => 25,
         
         'show_in_nav_menus' => true,
         'publicly_queryable' => true,
@@ -42,22 +42,79 @@ function register_cpt_sendit_subscriber() {
     register_post_type( 'sendit_subscriber', $args );
 }
 
+add_action( 'init', 'create_sendit_list_taxonomies', 0 );
+function create_sendit_list_taxonomies() 
+{
+  // Add new taxonomy, make it hierarchical (like categories)
+  $labels = array(
+    'name' => _x( 'Mailing Lists', 'mailing_list' ),
+    'singular_name' => _x( 'Mailing list', 'mailing_list' ),
+    'search_items' =>  __( 'Search Mailing lists' ),
+    'all_items' => __( 'All Mailing lists' ),
+    'parent_item' => __( 'Parent Mailing List' ),
+    'parent_item_colon' => __( 'Parent Mailing List:' ),
+    'edit_item' => __( 'Edit Mailing List' ), 
+    'update_item' => __( 'Update Mailing List' ),
+    'add_new_item' => __( 'Add New Mailing List' ),
+    'new_item_name' => __( 'New Mailing List' ),
+    'menu_name' => __( 'Mailing List' ),
+  ); 	
+
+  register_taxonomy('mailing_lists',array('sendit_subscriber'), array(
+    'hierarchical' => true,
+    'labels' => $labels,
+    'show_ui' => true,
+    'query_var' => true,
+    'rewrite' => array( 'slug' => 'mailing-list' ),
+  ));
+
+}
+
+
+
+/**
+ * Add additional fields to the taxonomy add view
+ * e.g. /wp-admin/edit-tags.php?taxonomy=category
+ */
+function sendit_list_metadata_add( $tag ) {
+	// Only allow users with capability to publish content
+	if ( current_user_can( 'publish_posts' ) ): ?>
+	<div class="form-field">
+		<label for="email_from"><?php _e('From email'); ?></label>
+		<input name="email_from" id="email_from" type="text" value="" size="40" />
+		<p class="description"><?php _e('The sender email'); ?></p>
+	</div>
+
+	<div class="form-field">
+		<label for="email_title"><?php _e('From name'); ?></label>
+		<input name="email_title" id="email_title" type="text" value="" size="40" />
+		<p class="description"><?php _e('your name or title usually displayed as sender'); ?></p>
+	</div>
+	<?php endif;
+}
+
+
 
 add_filter( 'manage_edit-sendit_subscriber_columns', 'sendit_edit_subscriber_columns' ) ;
 
 function sendit_edit_subscriber_columns( $columns ) {
-	
-	$sendit_morefields=get_option('sendit_dynamic_settings');
- 	$arr=json_decode($sendit_morefields);
-	//print_r($arr);
-	if(!empty($arr)): 
+
+
 	$columns = array(
 		'cb' => '<input type="checkbox" />',
 		'title' => __( 'Email' ),
 		'date' => __( 'Subscription Date' )
 
-	);
-		$morecolums[]=array('cb' => '');
+	);	
+	$sendit_morefields=get_option('sendit_dynamic_settings');
+
+
+
+ 	$arr=json_decode($sendit_morefields);
+	//print_r($arr);
+	if(!empty($arr)): 
+	
+		$morecolums[]=array();
  		foreach($arr as $k=>$v):		
 			$morecolums[]=$v->name;
 			//$allcolumns[]=array_merge($columns,$morecolums);
@@ -69,7 +126,7 @@ function sendit_edit_subscriber_columns( $columns ) {
 
 
 	$allcolumns=array_merge($columns,$morecolums);
-	return $allcolumns;
+	return $columns;
 	
 }
 

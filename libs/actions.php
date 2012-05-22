@@ -197,6 +197,15 @@ class Actions{
 		return true;
 	}
 	
+	function GetLists()
+	{
+		global $wpdb;
+    	$table_liste = SENDIT_LIST_TABLE;
+		$lista=$wpdb->get_row("select * from $table_liste ");	
+		return $lista;
+	}
+
+
 
 		
 	function GetListDetail($id_lista)
