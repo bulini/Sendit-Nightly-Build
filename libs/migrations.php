@@ -39,11 +39,14 @@ class Migrations{
 		
 	function MigrateLists()
 	{
+
+		$sendit_morefields=get_option('sendit_dynamic_settings');
+
 		$liste = $this->GetLists();
 		foreach($liste as $lista):
-			//wp_insert_term($lista->email_lista, 'mailing_lists');
+
 			//inserisco il TERM prendendo il nome della lista
-			$term_id= wp_insert_term(
+			$term_id=wp_insert_term(
 				  $lista->email_lista, // the term 
 				  'mailing_lists', // the taxonomy
 				  array(
@@ -52,10 +55,12 @@ class Migrations{
 				    'parent'=>0
 				  )
 				);
-				print_r($term_id);
+				//print_r($term_id);
 			$subscribers=$this->GetSubscribersbyList($lista->id_lista);	
+			$count=0;
+			
 		   	foreach($subscribers as $subscriber):
-		   		
+		   			$count++;
 
 					
 					$post = array(
@@ -69,37 +74,48 @@ class Migrations{
 						'to_ping' =>  '',
 						'pinged' => '',
 						'post_title' => $subscriber->email,
-						'import_id' => 0,
-						'tax_input' => array( 'mailing_lists' => $lista->nomelista)
+						'import_id' => 0
+						//'tax_input' => array( 'mailing_lists' => $lista->nomelista)
 						);
 					$new_post_id = wp_insert_post($post, $wp_error );
-					//wp_set_object_terms($new_post, array($term_id->term_id,0), 'mailing_lists' );
-					echo $new_post_id;
-					echo '-';
-					echo $term_id->term_id;
-					echo '<br />';
+					$terms = array_map('intval', $term_id);
+					
+					wp_set_object_terms($new_post_id, $terms, 'mailing_lists');
+					
+
+					add_post_meta($new_post_id, 'magic_string', $subscriber->magic_string);
+					//add more fields elements
+
+ 					  $arr=json_decode($sendit_morefields);
+					 	if(!empty($arr)): 	
+	 						foreach($arr as $k=>$v):
+	 							$field = $this->json_field($subscriber->subscriber_info,$v->name);
+								add_post_meta($new_post_id, $v->name, $field);		
+	 						endforeach;
+ 						endif;
+
+		
+
 			endforeach;
-		   
-		   
+		   			$terms = array_map('intval', $term_id);
+		   			$count_args=array('count'=> $count);
+					//wp_update_term($terms, 'mailing_lists', $count_args);
+					wp_update_term_count_now($terms,'mailing_lists');
+		   			echo 'inseriti '.$count.' nella lista '.$lista->id_lista.'<br />';
 		   
 		endforeach;
 		
 	}
 	
 
-/*
-
-	function MigrateSubscribers()
+	function json_field($json,$fieldname)
 	{
-		global $wpdb;
-    	$table_email = SENDIT_EMAIL_TABLE;
-		$subscribers=$wpdb->get_results("select * from $table_email");	
-		foreach($subscribers as $subscriber):
-			
-		endforeach;
+
+		$options= urldecode($json->options);
+		parse_str($options,$output);
+		return $output[$fieldname];
+		//print_r($output);
 	}
-	
-*/
 		
 	function GetListDetail($id_lista)
 	{
