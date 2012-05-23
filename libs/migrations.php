@@ -64,7 +64,7 @@ class Migrations{
 
 					
 					$post = array(
-						'post_status' => 'pending', 
+						'post_status' => 'publish', 
 						'post_type' => 'sendit_subscriber',
 						'post_author' => $user_ID,
 						'ping_status' => get_option('default_ping_status'), 
@@ -89,7 +89,7 @@ class Migrations{
  					  $arr=json_decode($sendit_morefields);
 					 	if(!empty($arr)): 	
 	 						foreach($arr as $k=>$v):
-	 							$field = $this->json_field($subscriber->subscriber_info,$v->name);
+	 							$field = GetSenditField($subscriber->subscriber_info,$v->name);
 								add_post_meta($new_post_id, $v->name, $field);		
 	 						endforeach;
  						endif;

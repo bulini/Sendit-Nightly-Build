@@ -1394,7 +1394,21 @@ function sendit_list_migration()
 {
 	require_once('migrations.php');
 	echo '<div class="wrap">
-			<h2>'.__('Mailing list migration').'</h2>';
+			<h2>'.__('Mailing list migration','sendit').'</h2>
+			<div class="update-message">
+			<h3>'.__('Warning update your database NOW in order to make Sendit Work correctly!','sendit').'</h3>
+			'.__('Warning new version will create and migrate all your subscribers and mailing lists to a new post type tab. You will have now your subscribers and post type imported to the new core so you can be sure to have the full control. if You have also Sendit More Fields on its custom field will be automatically transefed', 'sendit').'
+			<h4>'.__('1 - Run Migration process','sendit').'</h4>
+			<a class="button-primary" href="?page=sendit_list_migration&migration=1">'.__('Click here to run migration','sendit').'</a>
+			</div>
+			<h4>'.__('2 - View your new custom post type!','sendit').'</h4>
+			<a class="button-primary" href="?page=sendit_list_migration&migration=1">'.__('Click here to view your subscribers','sendit').'</a>
+			</div>
+			<h4>'.__('3 - Delete Old Sendit Table ()','sendit').'</h4>
+			<a class="button-primary" href="?page=sendit_list_migration&migration=1">'.__('Click here to delete ','sendit').'</a>
+			</div>';
+			
+			
 	if($_GET['migration']==1):
 		$migrations=new Migrations();
 		$migrations->MigrateLists();
