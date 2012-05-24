@@ -2,16 +2,7 @@
 require('constants.php');
 
 class Migrations{
-	
-	
-	function ChangeStatus($id,$status)
-	{
-		global $wpdb;
-		$table_request = $wpdb->prefix . "request";
-   		$update=$wpdb->query("update $table_request set payment_status = '$request' where id_request = $id"); 
-		return true;
-	}
-	
+
 	function GetLists()
 	{
 		global $wpdb;
@@ -84,6 +75,7 @@ class Migrations{
 					
 
 					add_post_meta($new_post_id, 'magic_string', $subscriber->magic_string);
+					add_post_meta($new_post_id, 'confirmed', $subscriber->accepted);
 					//add more fields elements
 
  					  $arr=json_decode($sendit_morefields);

@@ -63,7 +63,8 @@ function sendit_js()
 {
   // Spingo js su header (x luca)
   wp_print_scripts( array('jquery' ));
-
+  $sendit_morefields=get_option('sendit_dynamic_settings');
+  $arr=json_decode($sendit_morefields);
   // Define custom JavaScript function
 ?>
 		<script type="text/javascript">
@@ -93,7 +94,9 @@ function sendit_js()
 		        complete: function() { jQuery('#sendit_wait').hide(); jQuery('#sendit_subscribe_button').show(); },
 				type: "POST",
 		      	//data: ({jQuery("#senditform").serialize()}),
-		      	data: ({options : jQuery("#senditform").serialize(), email_add : jQuery('#email_add').val(),lista : jQuery('#lista').val(),accepted: jQuery('#accepted').val()}),
+		      	data: ({options : jQuery("#senditform").serialize(),email_add : jQuery('#email_add').val(),lista : jQuery('#lista').val(),accepted: jQuery('#accepted').val()<?php  					  
+				if(!empty($arr)): 	
+	 				foreach($arr as $k=>$v):?>,<?php echo $v->name; ?>: jQuery('#<?php echo $v->name; ?>').val()<?php endforeach; ?><?php endif; ?>}),
 		      	url: '<?php bloginfo( 'wpurl' ); ?>/wp-content/plugins/sendit/submit.php',
 		  		success: function(data) {
 		    	<?php if(get_option('sendit_response_mode')=='alert'): ?>
@@ -123,7 +126,7 @@ function checkphone(e) {
 		
 
 		
-		<?php
+<?php
 } 
 
 
