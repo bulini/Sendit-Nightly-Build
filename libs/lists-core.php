@@ -42,7 +42,7 @@
 	 						//print_r($_POST);	 							
 
 
-								$field = $_POST[$field];
+								$field = $_POST[$v->name];
 								echo $field;
 								add_post_meta($subscriber_id,$v->name, $field);		
 	 						endforeach;
