@@ -2,8 +2,8 @@
 include("../../../wp-blog-header.php");
 status_header(200);
 nocache_headers();
-require_once 'libs/actions.php';
-require_once 'libs/lists-core.php';
+//require_once 'libs/actions.php';
+require_once 'libs/shared/lists-core.php';
 //$sendit=new Actions();
 
 //$sendit->NewSubscriber();

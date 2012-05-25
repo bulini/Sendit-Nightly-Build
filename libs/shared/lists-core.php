@@ -25,15 +25,15 @@
     					'import_id' => 0
     					//'tax_input' => array( 'mailing_lists' => $lista->nomelista)
     					);
-    				if(!sendit_subscriber_lexist($email)):
+    				if(!sendit_subscriber_exist($email)):
 						$lista=esc_attr($term_id); //security hack suggested this summer
 						//$lista=(int)$lista;
-    					$subscriber_id = wp_insert_post($post, $wp_error );
+    					$subscriber_id = wp_insert_post($post, $wp_error);
     					$terms = array_map('intval', array($lista));
     				
 
     				
-    					wp_set_object_terms($new_post_id, $lista, 'mailing_lists');
+    					wp_set_object_terms($subscriber_id, $terms, 'mailing_lists');
 	                	wp_update_term_count_now($terms,'mailing_lists');
 	                	//genero stringa univoca x conferme sicure
 	                	$magic_string= md5(uniqid(rand(), true));
@@ -71,7 +71,7 @@
  * @return boolean.
  */
 	
-	function sendit_subscriber_lexist($email) 
+	function sendit_subscriber_exist($email) 
 	{
 		global $wpdb;
 		$user_count=$wpdb->get_var("SELECT COUNT(*) FROM wp_posts WHERE post_title = '".$email."'");
@@ -82,12 +82,31 @@
 			return FALSE;
 		endif;
 	}
+
+/**
+ * Get list details.
+ * @params id
+ * @since 3.0
+ * @return object.
+ */
+
 	
-	function suca($email,$lists=array())
+	function sendit_list_detail($id)
 	{
-		return $subscriber;
+		
+		return $list;
 	}	
-
-
+	
+/**
+ * Get list details.
+ * @params id
+ * @since 3.0
+ * @return object.
+ */
+ 
+	function sendit_list_subscribers($id)
+	{
+		return $list;	
+	}
 
 ?>

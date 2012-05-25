@@ -1,5 +1,4 @@
 <?php
-require('constants.php');
 
 class Migrations{
 

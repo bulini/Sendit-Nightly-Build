@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name: Sendit 3 BETA (Nightly Build)
+Plugin Name: Sendit 3 BETA official (Nightly Build)
 Plugin URI: http://www.giuseppesurace.com/sendit-wp-newsletter-mailing-list/
 Description: Wordpress newsletter plugin Sendit v 2 is totally rebuilt and custom post type based. Multiple ajax management added to 2.1.0. You can extend it and buy scheduler and newsletter tracking tool, more fields tool, export tool and others at http://sendit.wordpressplanet.org. With the new Sendit you can Send also  one of more of your post to your subscribers and manage mailing list in 2 click. New version also include an SMTP configuration and import functions from comments and author emails.
 Version: 3.0 BETA
@@ -14,10 +14,12 @@ include_once plugin_dir_path( __FILE__ ).'/libs/shared/lists-core.php';
 include_once plugin_dir_path( __FILE__ ).'/libs/shared/markup.php';
 include_once plugin_dir_path( __FILE__ ).'/libs/admin/meta-boxes.php';
 
+include_once plugin_dir_path( __FILE__ ).'/libs/shared/extensions-handler.php';
+
+
 
 //include_once plugin_dir_path( __FILE__ ).'/libs/actions.php';
 
-//include_once plugin_dir_path( __FILE__ ).'/libs/extensions-handler.php';
 
 
 //include_once plugin_dir_path( __FILE__ ).'/libs/import.php';

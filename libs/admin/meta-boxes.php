@@ -43,14 +43,43 @@ function sendit_add_custom_box()
   {
 	add_meta_box( 'content_choice', __( 'Append content from existing posts', 'sendit' ), 
 		          'sendit_content_box', 'newsletter', 'advanced','high' );
-    add_meta_box( 'mailinglist_choice', __( 'Save and Send', 'sendit' ), 
-                'sendit_custom_box', 'newsletter', 'advanced' );
+    add_meta_box( 'mailinglist_choice', __( 'Choose a mailing list from this box', 'sendit' ), 
+                'sendit_newsletter_box', 'newsletter', 'advanced' );
 
    } 
 }
 
+function sendit_newsletter_box($post)
+{
+	
+	$markup='<label>'.__('Choose mailing list','sendit').'</label>';
+	
+	$args = array(
+    'show_option_all'    => true,
+    'show_option_none'   => false,
+    'orderby'            => 'ID', 
+    'order'              => 'ASC',
+    'show_count'         => true,
+    'hide_empty'         => true, 
+    'child_of'           => 0,
+    'exclude'            => 0,
+    'echo'               => 0,
+    'selected'           => 0,
+    'hierarchical'       => 0, 
+    'name'               => 'sendit_mailing_list',
+    'class'              => 'postform',
+    'depth'              => 0,
+    'tab_index'          => 0,
+    'taxonomy'           => 'mailing_lists',
+    'hide_if_empty'      => false );
+    
+     $markup.= wp_dropdown_categories( $args ); 	
 
-function sendit_custom_box($post) {
+	echo $markup;
+}
+
+
+function sendit_custom_box_old($post) {
 	$sendit = new Actions();
 	global $wpdb;
 	$choosed_list = get_post_meta($post->ID, 'sendit_list', TRUE);

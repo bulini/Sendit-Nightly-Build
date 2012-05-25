@@ -11,6 +11,65 @@ add_shortcode("quote", "quote");
 function quote( $atts, $content = null ) {  
     return '<div class="right text">"'.$content.'"</div>';  
 }
+
+
+add_action("admin_print_scripts",'morefield_js_libs');
+add_action("admin_print_styles",'morefield_style_libs');
+
+add_action('admin_head', 'morefield_javascript');
+add_action('wp_footer', 'morefield_javascript');
+
+
+
+
+function morefield_javascript() {
+?>
+<link rel="stylesheet" href="<?php echo get_bloginfo('siteurl'); ?>/wp-content/plugins/sendit/css/validationEngine.jquery.css" type="text/css"/>
+<script src="<?php echo get_bloginfo('siteurl'); ?>/wp-content/plugins/sendit/js/languages/jquery.validationEngine-en.js" type="text/javascript" charset="utf-8">
+	</script>
+	<script src="<?php echo get_bloginfo('siteurl'); ?>/wp-content/plugins/sendit/js/jquery.validationEngine.js" type="text/javascript" charset="utf-8">
+	</script>
+	<script>
+		jQuery(document).ready(function(){
+		
+			jQuery("#senditform").submit("jqv.form.validating", function(event, errorFound) {
+  			if(errorFound)
+     			alert("There is a problem with your form");
+			});
+
+			
+			// binds form submission and fields to the validation engine
+			jQuery("#senditform").validationEngine();
+		});
+		
+	</script>
+<?php
+}
+
+
+add_action('wp_ajax_my_action', 'morefield_callback');
+
+function morefield_callback() {
+	global $wpdb; // this is how you get access to the database
+
+	$whatever = intval( $_GET['subscriber_id'] );
+	echo 'test';
+	
+	die(); // this is required to return a proper result
+}
+
+
+
+function morefield_js_libs() {
+    wp_enqueue_script('jquery');
+    wp_enqueue_script('thickbox');
+}
+
+function morefield_style_libs() {
+    wp_enqueue_style('thickbox');
+}
+
+
 	
 if (function_exists('sendit_morefields')) {
 

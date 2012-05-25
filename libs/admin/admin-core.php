@@ -5,7 +5,7 @@ function sendit_admin_head() {
   	wp_print_scripts( array('jquery-ui-draggable','jquery-ui-sortable' ));
 
     $siteurl = get_option('siteurl');
-    $url = $siteurl . '/wp-content/plugins/sendit/sendit-admin.css';
+    $url = $siteurl . '/wp-content/plugins/sendit/css/sendit-admin.css';
     echo "<link rel='stylesheet' type='text/css' href='$url' />\n";
 	echo '<style type="text/css">'.get_option('sendit_css').'</style>';
 	?>
