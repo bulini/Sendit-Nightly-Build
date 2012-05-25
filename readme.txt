@@ -4,9 +4,9 @@ Donate link: http://www.giuseppesurace.com/wordpress/
 Tags: newsletter, mailing list, mailinglist, subscription form
 Requires at least: 3.0.1
 Tested up to: 3.3.1
-Stable tag: 2.1.0
+Stable tag: 3.0 (beta)
 
-Sendit is the most simple newsletter and double opt in mailing lists plugin for Wordpress born to made simple the newsletter delivery and mailing list management.
+Sendit 3 completely refactored is the most simple newsletter and double opt in mailing lists plugin for Wordpress born to made simple the newsletter delivery and mailing list management.
 
 == Description == 
 Sendit 2 enable you to send newsletters and collect subscribers from your blog. You can manage one or more list and using in post/pages or using the widget (now customizable). You can extract content from post or pages or create your content to send to subscribers. You can also edit the template for each mailing lists just put some XHTML code on header and footer. Newsletter will be send in XHTML format. Checkout the professional newsletter scheduler Sendit Pro to use with cron jobs: http://sendit.wordpressplanet.org also coming soon a lot of professional plugin like more fields to add fields to your subscription form, Sendit Export pro  to export your mailing list as csv.

@@ -1,21 +1,26 @@
 <?php
 /*
-Plugin Name: Sendit (Nightly Build)
+Plugin Name: Sendit 3 BETA (Nightly Build)
 Plugin URI: http://www.giuseppesurace.com/sendit-wp-newsletter-mailing-list/
 Description: Wordpress newsletter plugin Sendit v 2 is totally rebuilt and custom post type based. Multiple ajax management added to 2.1.0. You can extend it and buy scheduler and newsletter tracking tool, more fields tool, export tool and others at http://sendit.wordpressplanet.org. With the new Sendit you can Send also  one of more of your post to your subscribers and manage mailing list in 2 click. New version also include an SMTP configuration and import functions from comments and author emails.
-Version: 3.0
+Version: 3.0 BETA
 Author: Giuseppe Surace
 Author URI: http://www.giuseppesurace.com
 */
 
 include_once plugin_dir_path( __FILE__ ).'/libs/install-core.php';
-include_once plugin_dir_path( __FILE__ ).'/libs/markup.php';
-include_once plugin_dir_path( __FILE__ ).'/libs/actions.php';
-include_once plugin_dir_path( __FILE__ ).'/libs/admin.php';
-include_once plugin_dir_path( __FILE__ ).'/libs/extensions-handler.php';
-include_once plugin_dir_path( __FILE__ ).'/libs/lists-core.php';
-include_once plugin_dir_path( __FILE__ ).'/libs/meta-boxes.php';
-include_once plugin_dir_path( __FILE__ ).'/libs/import.php';
+include_once plugin_dir_path( __FILE__ ).'/libs/admin/admin-core.php';
+include_once plugin_dir_path( __FILE__ ).'/libs/shared/lists-core.php';
+include_once plugin_dir_path( __FILE__ ).'/libs/shared/markup.php';
+include_once plugin_dir_path( __FILE__ ).'/libs/admin/meta-boxes.php';
+
+
+//include_once plugin_dir_path( __FILE__ ).'/libs/actions.php';
+
+//include_once plugin_dir_path( __FILE__ ).'/libs/extensions-handler.php';
+
+
+//include_once plugin_dir_path( __FILE__ ).'/libs/import.php';
 
 load_plugin_textdomain('sendit', false, basename(dirname(__FILE__)) . '/languages'); //thanks to Davide http://www.jqueryitalia.org
 
@@ -70,9 +75,9 @@ function sendit_ignore() {
 }
 
 
+add_action('init', 'sendit_custom_post_type_init'); //libs/install-core.php
 
-
-add_action('wp_head', 'sendit_js');
+add_action('wp_head', 'sendit_js'); //libs/shared/markup.php
 add_action('admin_head', 'sendit_js');
 add_action('wp_head', 'sendit_loading_image');
 add_action('wp_head', 'sendit_register_head');
@@ -81,7 +86,7 @@ add_action('admin_menu', 'gestisci_menu');
 
 add_action('admin_head', 'sendit_admin_head');
 add_action('admin_head', 'sendit_admin_js');
-add_action('init', 'sendit_custom_post_type_init');
+
 add_action('save_post', 'sendit_save_postdata');
 
 add_action('save_post', 'send_newsletter');
