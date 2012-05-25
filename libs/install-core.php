@@ -246,7 +246,7 @@ function sendit_install() {
 <!-- the shortcode to generate subscription fields -->
         {sendit_morefields}
     	<p><label for="email_add">Your email</label>
-       		<input id="email_add" class="validate[email]" type="text" placeholder="email here" name="email_add"/>
+       		<input id="email_add" class="validate[custom[email]]" type="text" placeholder="email here" name="email_add"/>
        		<input type="hidden" name="accepted" id="accepted" value="{accepted}">
        		<input type="hidden" name="lista" id="lista" value="{list_id}"><div id="sendit_wait" style="display:none;"></div>
        	        <input class="button" type="button" id="sendit_subscribe_button" name="agg_email" value="{subscribe_text}"/>

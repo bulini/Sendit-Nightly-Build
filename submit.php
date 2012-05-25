@@ -7,5 +7,5 @@ require_once 'libs/lists-core.php';
 //$sendit=new Actions();
 
 //$sendit->NewSubscriber();
-sendit_new_subscriber($_POST['email_add'],array($_POST['lista']));
+sendit_new_subscriber($_POST['email_add'],$_POST['lista']);
 ?>
