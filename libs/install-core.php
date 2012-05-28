@@ -1,6 +1,6 @@
 <?php 
 /*******************************
-Installation core
+Installation new core
 *******************************/
 require('constants.php');
 global $sendit_db_version;
@@ -50,7 +50,52 @@ function register_cpt_sendit_subscriber() {
     register_post_type( 'sendit_subscriber', $args );
 }
 
+add_action( 'init', 'register_cpt_sendit_template' );
+
+function register_cpt_sendit_template() {
+
+    $labels = array( 
+        'name' => _x( 'Newsletter Template', 'sendit_template' ),
+        'singular_name' => _x( 'Template', 'sendit_template' ),
+        'add_new' => _x( 'Add New', 'sendit_subscriber' ),
+        'add_new_item' => _x( 'Add New Template', 'sendit_template' ),
+        'edit_item' => _x( 'Edit Template', 'sendit_template' ),
+        'new_item' => _x( 'New Template', 'sendit_template' ),
+        'view_item' => _x( 'View Template', 'sendit_template' ),
+        'search_items' => _x( 'Search Template', 'sendit_template' ),
+        'not_found' => _x( 'No Templates found', 'sendit_template' ),
+        'not_found_in_trash' => _x( 'No Templates found in Trash', 'sendit_template' ),
+        'parent_item_colon' => _x( 'Parent Tenplate:', 'sendit_template' ),
+        'menu_name' => _x( 'Templates', 'sendit_template' ),
+    );
+
+    $args = array( 
+        'labels' => $labels,
+        'hierarchical' => false,
+        
+        'supports' => array( 'title', 'custom-fields','editor'),
+        'taxonomies' => array( 'mailing_lists' ),
+        'public' => true,
+        'show_ui' => true,
+        'show_in_menu' => true,
+        'menu_position' => 25,
+        
+        'show_in_nav_menus' => true,
+        'publicly_queryable' => true,
+        'exclude_from_search' => false,
+        'has_archive' => true,
+        'query_var' => true,
+        'can_export' => true,
+        'rewrite' => true,
+        'capability_type' => 'post'
+    );
+
+    register_post_type( 'sendit_template', $args );
+}
+
 add_action( 'init', 'create_sendit_list_taxonomies', 0 );
+
+
 function create_sendit_list_taxonomies() 
 {
   // Add new taxonomy, make it hierarchical (like categories)
@@ -68,7 +113,7 @@ function create_sendit_list_taxonomies()
     'menu_name' => __( 'Mailing List' ),
   ); 	
 
-  register_taxonomy('mailing_lists',array('sendit_subscriber'), array(
+  register_taxonomy('mailing_lists',array('sendit_subscriber','sendit_template'), array(
     'hierarchical' => true,
     'labels' => $labels,
     'show_ui' => true,

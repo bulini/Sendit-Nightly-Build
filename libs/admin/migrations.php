@@ -35,6 +35,9 @@ class Migrations{
 		$liste = $this->GetLists();
 		foreach($liste as $lista):
 
+		
+		
+
 			//inserisco il TERM prendendo il nome della lista
 			$term_id=wp_insert_term(
 				  $lista->email_lista, // the term 
@@ -46,6 +49,28 @@ class Migrations{
 				  )
 				);
 				//print_r($term_id);
+					//inserisco il post del template
+					$post = array(
+						'post_status' => 'publish', 
+						'post_type' => 'sendit_template',
+						'post_author' => $user_ID,
+						'ping_status' => get_option('default_ping_status'), 
+						'post_parent' => 0,
+						'post_content'=>$lista->header.'[sendit_newsletter_content]'.$lista->footer,
+						'post_name' => 'Template imported from '.sanitize_title($lista->nomelista),
+						'menu_order' => 0,
+						'to_ping' =>  '',
+						'pinged' => '',
+						'post_title' => 'Template imported from '.sanitize_title($lista->nomelista),
+						'import_id' => 0
+						//'tax_input' => array( 'mailing_lists' => $lista->nomelista)
+						);
+					$new_template_id = wp_insert_post($post, $wp_error );				
+					$terms = array_map('intval', $term_id);
+					wp_set_object_terms($new_template_id, $terms, 'mailing_lists');
+			
+				
+				
 			$subscribers=$this->GetSubscribersbyList($lista->id_lista);	
 			$count=0;
 			
