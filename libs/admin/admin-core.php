@@ -1403,16 +1403,35 @@ function sendit_list_migration()
 			</div>
 			<h4>'.__('2 - View your new custom post type!','sendit').'</h4>
 			<a class="button-primary" href="?page=sendit_list_migration&migration=1">'.__('Click here to view your subscribers','sendit').'</a>
-			</div>
+			
 			<h4>'.__('3 - Delete Old Sendit Table ()','sendit').'</h4>
 			<a class="button-primary" href="?page=sendit_list_migration&migration=1">'.__('Click here to delete ','sendit').'</a>
-			</div>';
+			</div>
+			<h4>'.__('4 - Copy preview files single-newsletter.php and single-sendit_template.php in your theme ()','sendit').'</h4>
+			<a class="button-primary" href="?page=sendit_list_migration&move_sendit_files=1">'.__('Click here to proceed ','sendit').'</a>';
 			
 			
 	if($_GET['migration']==1):
 		$migrations=new Migrations();
 		$migrations->MigrateLists();
 	endif;
+	
+	if($_GET['move_sendit_files']==1):
+	
+		$file = 'example.txt';
+		$dest=get_stylesheet_directory().'/';
+		$src=
+
+		$newfile = 'example.txt.bak';
+
+		if (!copy($file, $newfile)) {
+    		echo "failed to copy $file...\n";
+		}
+		
+	endif;
+			
+	
+	
 			
 	echo '</div>';
 }
