@@ -6,5 +6,8 @@ define('SENDIT_LIST_TABLE', $wpdb->prefix . "nl_liste");
 define('SENDIT_VERSION', '3.0.0');
 define('SENDIT_DB_VERSION', '3.0.0');
 
+/*new constant*/
+define('SENDIT_PLUGIN_DIR',plugin_dir_path(__FILE__));
+
 
 ?>

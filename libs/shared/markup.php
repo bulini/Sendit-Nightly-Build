@@ -212,8 +212,8 @@ function JqueryForm($args) {
 }
 
 function Sendit_widget_options() {
-        if ($_POST['id_lista']) {
-            $id_lista=$_POST['id_lista'];
+        if ($_POST['sendit_mailing_list']) {
+            $id_lista=$_POST['sendit_mailing_list'];
             $titolo=$_POST['titolo'];
             update_option('id_lista',$id_lista);
             update_option('titolo',$_POST['titolo']);
@@ -222,8 +222,28 @@ function Sendit_widget_options() {
         $titolo = get_option('titolo');
         //titolo
         echo '<p><label for="titolo">'.__('Newsletter title: ', 'sendit').' <input id="titolo" name="titolo"  type="text" value="'.$titolo.'" /></label></p>';
+        
+        	$args = array(
+			    'show_option_all'    => false,
+			    'show_option_none'   => false,
+			    'orderby'            => 'ID', 
+			    'order'              => 'ASC',
+			    'show_count'         => true,
+			    'hide_empty'         => true, 
+			    'child_of'           => 0,
+			    'exclude'            => 0,
+			    'echo'               => 0,
+			    'selected'           => $id_lista,
+			    'hierarchical'       => 0, 
+			    'name'               => 'sendit_mailing_list',
+			    'class'              => 'postform',
+			    'depth'              => 0,
+			    'tab_index'          => 0,
+			    'taxonomy'           => 'mailing_lists',
+			    'hide_if_empty'      => false );
+        
         //id della mailing list
-        echo '<p><label for="id_lista">'.__('Mailing list ID: ', 'sendit').' <input id="id_lista" name="id_lista" type="text" value="'.$id_lista.'" /></label></p>';
+        echo '<p><label for="id_lista">'.__('Mailing list ID: ', 'sendit').wp_dropdown_categories($args).'</p>';
         
             
     }

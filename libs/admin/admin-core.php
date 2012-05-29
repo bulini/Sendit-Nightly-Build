@@ -1417,14 +1417,18 @@ function sendit_list_migration()
 	endif;
 	
 	if($_GET['move_sendit_files']==1):
-	
-		$file = 'example.txt';
-		$dest=get_stylesheet_directory().'/';
-		$src=
+		//echo SENDIT_PLUGIN_DIR;
+		$newsletter_file = SENDIT_PLUGIN_DIR.'frontend/single-newsletter.php';
+		$newsletter_dest=get_stylesheet_directory().'/single-newsletter.php';
 
-		$newfile = 'example.txt.bak';
+		if (!copy($newsletter_file, $newsletter_dest)) {
+    		echo "failed to copy $file...\n";
+		}
 
-		if (!copy($file, $newfile)) {
+		$template_file = SENDIT_PLUGIN_DIR.'frontend/single-sendit_template.php';
+		$template_dest=get_stylesheet_directory().'/single-sendit_template.php';
+
+		if (!copy($template_file, $template_dest)) {
     		echo "failed to copy $file...\n";
 		}
 		

@@ -55,7 +55,7 @@ function sendit_newsletter_box($post)
 	$markup='<label>'.__('Choose mailing list','sendit').'</label>';
 	
 	$args = array(
-    'show_option_all'    => true,
+    'show_option_all'    => false,
     'show_option_none'   => false,
     'orderby'            => 'ID', 
     'order'              => 'ASC',
