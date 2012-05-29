@@ -41,13 +41,47 @@ function sendit_add_custom_box()
 {
   if( function_exists( 'add_meta_box' ))
   {
-	add_meta_box( 'content_choice', __( 'Append content from existing posts', 'sendit' ), 
-		          'sendit_content_box', 'newsletter', 'advanced','high' );
-    add_meta_box( 'mailinglist_choice', __( 'Choose a mailing list from this box', 'sendit' ), 
-                'sendit_newsletter_box', 'newsletter', 'advanced' );
+	add_meta_box( 'template_html', __( 'Edit newsletter template', 'sendit' ),'sendit_html_box', 'sendit_template', 'advanced','high' );
 
+	add_meta_box( 'content_choice', __( 'Append content from existing posts', 'sendit' ),'sendit_content_box', 'newsletter', 'advanced','high' );
+    add_meta_box( 'mailinglist_choice', __( 'Choose a mailing list from this box', 'sendit' ), 'sendit_newsletter_box', 'newsletter', 'advanced' );
+    //template engine from 3.0
+    
    } 
 }
+
+//add_meta_box(	'gallery-type-div', __('Gallery Type'),  'gallery_type_metabox', 'gallery', 'normal', 'low');
+ 
+function gallery_type_metabox($post) {
+	$gallery_type = get_post_meta($post->ID, '_gallery_type', TRUE);
+	if (!$gallery_type) $gallery_type = 'attachment'; 	 
+	?>
+        <input type="hidden" name="gallery_type_noncename" id="gallery_type_noncename" value="<?php echo wp_create_nonce( 'gallery_type'.$post->ID );?>" />
+	<input type="radio" name="gallery_type" value="any" <?php if ($gallery_type == 'any') echo "checked=1";?>> Any.<br/>
+	<input type="radio" name="gallery_type" value="attachment" <?php if ($gallery_type == 'attachment') echo "checked=1";?>> Only Attachments.<br/>
+	<input type="radio" name="gallery_type" value="post" <?php if ($gallery_type == 'post') echo "checked=1";?>> Only Posts.<br/>
+	<input type="radio" name="gallery_type" value="gallery" <?php if ($gallery_type == 'gallery') echo "checked=1";?>> Only Galleries.<br/>
+	<?php
+}
+
+
+function sendit_html_box($post)
+{
+	$header=get_post_meta($post->ID, 'header_html', TRUE);
+	$footer=get_post_meta($post->ID, 'footer_html', TRUE); 
+	?>
+	<h3><?php _e('Html Header', 'sendit') ?></h3>
+	
+	<?php 
+	wp_editor($header, 'header_html', $settings = array() );
+	?>
+	<h3><?php _e('Html Footer', 'sendit') ?></h3>
+
+	<?php 
+	wp_editor($footer, 'footer_html', $settings = array() );
+
+}
+
 
 function sendit_newsletter_box($post)
 {
@@ -79,54 +113,7 @@ function sendit_newsletter_box($post)
 }
 
 
-function sendit_custom_box_old($post) {
-	$sendit = new Actions();
-	global $wpdb;
-	$choosed_list = get_post_meta($post->ID, 'sendit_list', TRUE);
-	//echo $choosed_list;
-	$table_email =  SENDIT_EMAIL_TABLE;   
-	$table_liste =  SENDIT_LIST_TABLE;   
-    $liste = $wpdb->get_results("SELECT id_lista, nomelista FROM $table_liste ");
-	echo '<label for="send_now">'.__('Action', 'sendit').': </label>';
-	
-	if(get_post_meta($post->ID, 'send_now', TRUE)=='2'):
-		echo '<div class="jobrunning senditmessage"><h5>'.__('Warning newsletter is currently running the job','sendit').'</h5></div>';
-	elseif(get_post_meta($post->ID, 'send_now', TRUE)=='4'):
-		echo '<div class="jobdone senditmessage"><h5>'.__('Newsletter already Sent','sendit').'</h5></div>';
-	else:
-		
-	endif;	
-	
-	echo '<select name="send_now" id="send_now">';
-	
-	if(function_exists('Sendit_tracker_installation')):
-		if(get_post_meta($post->ID, 'send_now', TRUE)==2){ $selected=' selected="selected" ';} else { $selected='';}
-		echo '<option value="2" '.$selected.'>'.__( 'Schedule with Sendit Pro', 'sendit' ).'</option>';
-	endif;
-		if(get_post_meta($post->ID, 'send_now', TRUE)==1){ $selected=' selected="selected" ';} else { $selected='';}
-		echo '<option value="1" '.$selected.'>'.__( 'Send now', 'sendit' ).'</option>';	
 
-		if(get_post_meta($post->ID, 'send_now', TRUE)==0){ $selected=' selected="selected" ';} else { $selected='';}
-		echo '<option value="0" '.$selected.'>'.__( 'Save and send later', 'sendit' ).'</option>';
-		
-		if(get_post_meta($post->ID, 'send_now', TRUE)==4){ $selected=' selected="selected" ';} else { $selected='';}
-		echo '<option value="4" '.$selected.'>'.__( 'Sent with Sendit pro', 'sendit' ).'</option>';	
-		
-		if(get_post_meta($post->ID, 'send_now', TRUE)==5){ $selected=' selected="selected" ';} else { $selected='';}
-		echo '<option value="4" '.$selected.'>'.__( 'Sent with Sendit free', 'sendit' ).'</option>';
-				
-	echo '</select><br />';
-	echo '<h4>'.__('Select List', 'sendit').'</h4>';
-	foreach($liste as $lista): 
-		$subscribers=count($sendit->GetSubscribers($lista->id_lista));?>
-    	<input type="radio" name="sendit_list" value="<?php echo $lista->id_lista; ?>" <?php if ($choosed_list == $lista->id_lista) echo "checked=1";?>> <?php echo $lista->nomelista; ?>  subscribers: <?php echo $subscribers; ?><br/>
-	<?php endforeach; ?>
-
-
-	<input type="hidden" name="sendit_noncename" id="sendit_noncename" value="<?php echo wp_create_nonce( 'sendit_noncename'.$post->ID );?>" />
-	
-	<?php
-}
 
 function sendit_content_box($post) {
 	global $post;

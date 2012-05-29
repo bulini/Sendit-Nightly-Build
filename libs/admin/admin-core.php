@@ -414,7 +414,7 @@ function MainSettings($c='')
 
 /**********PAGINA SEGMENTS **********/
 function Iscritti() {
-	require('pagination.class.php');
+	require(SENDIT_PLUGIN_DIR.'pagination.class.php');
     global $_POST;
     global $wpdb;
     

@@ -9,7 +9,7 @@
 
 
      <?php while (have_posts()) : the_post(); ?>
-       <!-- Do your post header stuff here for single post-->
+       
           <?php the_content() ?>
        <!-- Do your post footer stuff here for single post-->
      <?php endwhile; ?>

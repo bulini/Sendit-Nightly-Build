@@ -35,7 +35,7 @@ function register_cpt_sendit_subscriber() {
         'public' => true,
         'show_ui' => true,
         'show_in_menu' => true,
-        'menu_position' => 25,
+        'menu_position' => 20,
         
         'show_in_nav_menus' => true,
         'publicly_queryable' => false,
@@ -73,12 +73,12 @@ function register_cpt_sendit_template() {
         'labels' => $labels,
         'hierarchical' => false,
         
-        'supports' => array( 'title', 'custom-fields','editor'),
-        'taxonomies' => array( 'mailing_lists' ),
+        'supports' => array( 'title', 'custom-fields'),
+
         'public' => true,
         'show_ui' => true,
         'show_in_menu' => true,
-        'menu_position' => 25,
+        'menu_position' => 20,
         
         'show_in_nav_menus' => true,
         'publicly_queryable' => true,
@@ -87,8 +87,12 @@ function register_cpt_sendit_template() {
         'query_var' => true,
         'can_export' => true,
         'rewrite' => true,
-        'capability_type' => 'post'
-    );
+        'capability_type' => 'post',
+    	'register_meta_box_cb' => 'sendit_add_custom_box'
+    	);
+    	
+    
+
 
     register_post_type( 'sendit_template', $args );
 }
@@ -113,7 +117,7 @@ function create_sendit_list_taxonomies()
     'menu_name' => __( 'Mailing List' ),
   ); 	
 
-  register_taxonomy('mailing_lists',array('sendit_subscriber','sendit_template'), array(
+  register_taxonomy('mailing_lists',array('sendit_subscriber'), array(
     'hierarchical' => true,
     'labels' => $labels,
     'show_ui' => true,
@@ -152,7 +156,7 @@ function sendit_custom_post_type_init()
     'rewrite' => false,
     'capability_type' => 'post',
     'hierarchical' => false,
-    'menu_position' => null,
+    'menu_position' => 20,
     'supports' => array('title','editor','thumbnail'),
 	'rewrite' => array(
     'slug' => 'newsletter',
@@ -168,6 +172,8 @@ function sendit_custom_post_type_init()
 }
 
 add_filter('post_updated_messages', 'newsletter_updated_messages');
+
+
 function newsletter_updated_messages( $messages ) {
 	global $_POST;
 

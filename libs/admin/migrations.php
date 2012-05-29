@@ -66,8 +66,12 @@ class Migrations{
 						//'tax_input' => array( 'mailing_lists' => $lista->nomelista)
 						);
 					$new_template_id = wp_insert_post($post, $wp_error );				
-					$terms = array_map('intval', $term_id);
-					wp_set_object_terms($new_template_id, $terms, 'mailing_lists');
+						
+					add_post_meta($new_template_id, 'header_html', $lista->header);
+					add_post_meta($new_template_id, 'footer_html', $lista->footer);
+					add_post_meta($new_template_id, 'old_list_id', $lista->id_lista);
+
+
 			
 				
 				
