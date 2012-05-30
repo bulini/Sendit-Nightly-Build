@@ -73,7 +73,7 @@ function register_cpt_sendit_template() {
         'labels' => $labels,
         'hierarchical' => false,
         
-        'supports' => array( 'title', 'custom-fields'),
+        'supports' => array( 'title',),
 
         'public' => true,
         'show_ui' => true,
