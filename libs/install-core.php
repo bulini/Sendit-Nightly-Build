@@ -157,7 +157,7 @@ function sendit_custom_post_type_init()
     'capability_type' => 'post',
     'hierarchical' => false,
     'menu_position' => 20,
-    'supports' => array('title','editor','thumbnail'),
+    'supports' => array('title','editor','thumbnail','custom-fields'),
 	'rewrite' => array(
     'slug' => 'newsletter',
     'with_front' => FALSE
