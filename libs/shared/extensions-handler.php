@@ -76,7 +76,7 @@ function export_subscribers_screen()
 		<a class="button primary" href="http://sendit.wordpressplanet.org/plugin-shop/wordpress-plugin/sendit-pro-csv-list-exporter/"><?php echo __('Buy this plugin Now for 5 euros', 'Sendit'); ?></a>
 	
 	</div>
-<? }
+<?php }
 
 function sendit_morefields_screen()
 { ?>
@@ -92,7 +92,7 @@ function sendit_morefields_screen()
 		<?php echo __('Buy this plugin Now for 5 euros', 'Sendit'); ?></a>
 	
 	</div>
-<? }
+<?php }
 
 add_filter("manage_edit-newsletter_columns", "senditfree_newsletter_columns");
 
@@ -145,7 +145,9 @@ function senditfree_manage_newsletter_columns($column_name, $id) {
 	break;
 		
 	case 'list':
-		echo 'List id: '. get_post_meta($id,'sendit_list',TRUE);
+;
+       echo get_the_term_list($id, 'mailing_lists', 'Destinatari: ', ', ', '' ); 
+		
 		if(!function_exists('Sendit_tracker_installation'))
 		{
 			/*
@@ -160,8 +162,17 @@ function senditfree_manage_newsletter_columns($column_name, $id) {
 	
 	break;
 	
+	
 	case 'subscribers':
+	
+		$subscribers=query_posts('post_type=sendit_subscriber');
+		echo count($subscribers);
+	
+	
 		echo get_post_meta($id,'subscribers',TRUE);
+	
+	
+	
 	break;
 
 	case 'startnum':

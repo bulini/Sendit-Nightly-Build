@@ -20,7 +20,43 @@ function sendit_list_metadata_add( $tag ) {
 	<?php endif;
 }
 
+add_action('init', 'sendit_empty_check');
+//remove all custom fields empty
+
 add_action('mailing_lists_add_form_fields', 'sendit_list_metadata_add', 10, 1);
+
+function sendit_empty_check() {
+
+	$post_id=$_GET['post'];
+	if($post_id):
+
+	    //obtain custom field meta for this post
+	     $custom_fields = get_post_custom($post_id);
+	
+	    foreach($custom_fields as $key=>$values):
+	    //$values is an array of values associated with $key - even if there is only one value. 
+	    //Filter to remove empty values.
+	    //Be warned this will remove anything that casts as false, e.g. 0 or false 
+	    //- if you don't want this, specify a callback.
+	    //See php documentation on array_filter
+	    $nonemptyvalues = array_filter($values);
+	
+	    //If the $nonemptyvalues doesn't match $values then we removed an empty value(s).
+	    if($nonemptyvalues!=$values):
+	         //delete key
+	         delete_post_meta($post_id,$key);
+	
+	         //re-add key and insert only non-empty values
+	         foreach($nonemptyvalues as $nonemptyvalue){
+	             add_post_meta($post_id,$key,$nonemptyvalue);
+	         }
+	    endif;  
+	endforeach;
+	endif;
+
+
+} 
+
 
 /**
  * Save newsletter meta data
@@ -54,9 +90,8 @@ function sendit_add_custom_box()
 	add_meta_box( 'template_html', __( 'Edit newsletter template', 'sendit' ),'sendit_html_box', 'sendit_template', 'advanced','high' );
 	//content choice send element to editor
 	add_meta_box( 'content_choice', __( 'Append content from existing posts', 'sendit' ),'sendit_content_box', 'newsletter', 'advanced','high' );
-    add_meta_box( 'mailinglist_choice', __( 'Choose a mailing list from this box', 'sendit' ), 'sendit_newsletter_box', 'newsletter', 'side','high' );
 	//template choice from newsletter
-	add_meta_box( 'template_choice', __( 'Select template for newsletter', 'sendit' ),'sendit_template_select', 'newsletter', 'advanced','high' );
+	add_meta_box( 'template_choice', __( 'Select template for newsletter', 'sendit' ),'sendit_template_select', 'newsletter', 'side','high' );
     
    } 
 }
@@ -68,6 +103,7 @@ query_posts('post_type=sendit_template');
 
  ?>
 <select name="template_id" id="template_id">
+			<option value="<?php echo get_post_meta($post->ID,'template_id', true);?>" selected="selected"><?php echo get_the_title(get_post_meta($post->ID,'template_id', true));?></option>
 			<?php
 			  while (have_posts()) : the_post(); ?>
 				<option value="<?php the_ID(); ?>"><?php the_title(); ?></option>
@@ -86,6 +122,10 @@ query_posts('post_type=sendit_template');
 
 function sendit_html_box($post)
 {
+	
+	
+	
+	
 	$css=get_post_meta($post->ID, 'newsletter_css', TRUE);
 	$header=get_post_meta($post->ID, 'headerhtml', TRUE);
 	$footer=get_post_meta($post->ID, 'footerhtml', TRUE); 
@@ -93,46 +133,22 @@ function sendit_html_box($post)
 	<h3><?php _e('Custom Css','sendit'); ?></h3>
 	<textarea name="newsletter_css" cols="80" rows="20"><?php echo $css;  ?></textarea>
 	<h3><?php _e('Html Header', 'sendit') ?></h3>
+	<textarea name="headerhtml" cols="80" rows="20"><?php echo $header;  ?></textarea>
+	
+	
 	
 	<?php 
-	wp_editor($header, 'headerhtml', $settings = array() );
+	//wp_editor($header, 'headerhtml', $settings = array() );
 	?>
 	<h3><?php _e('Html Footer', 'sendit') ?></h3>
-
+	<textarea name="footerhtml" cols="80" rows="20"><?php echo $footer;  ?></textarea>
 	<?php 
-	wp_editor($footer, 'footerhtml', $settings = array() );
+	//wp_editor($footer, 'footerhtml', $settings = array() );
 
 }
 
 
-function sendit_newsletter_box($post)
-{
-	
-	$markup='<label>'.__('Choose mailing list','sendit').'</label>';
-	
-	$args = array(
-    'show_option_all'    => false,
-    'show_option_none'   => false,
-    'orderby'            => 'ID', 
-    'order'              => 'ASC',
-    'show_count'         => true,
-    'hide_empty'         => true, 
-    'child_of'           => 0,
-    'exclude'            => 0,
-    'echo'               => 0,
-    'selected'           => 0,
-    'hierarchical'       => 0, 
-    'name'               => 'sendit_mailing_list',
-    'class'              => 'postform',
-    'depth'              => 0,
-    'tab_index'          => 0,
-    'taxonomy'           => 'mailing_lists',
-    'hide_if_empty'      => false );
-    
-     $markup.= wp_dropdown_categories( $args ); 	
 
-	echo $markup;
-}
 
 
 
@@ -198,7 +214,26 @@ function sendit_template_postdata( $post_id )
  
   	if ( !current_user_can( 'edit_page', $post_id )) return $post_id;
  	$post = get_post($post_id);
+	//obtain custom field meta for this post
+     $custom_fields = get_post_custom($post_id);
 
+    if(!$custom_fields) return;
+
+    foreach($custom_fields as $key=>$custom_field):
+        //$custom_field is an array of values associated with $key - even if there is only one value. 
+        //Filter to remove empty values.
+        //Be warned this will remove anything that casts as false, e.g. 0 or false 
+        //- if you don't want this, specify a callback.
+        //See php documentation on array_filter
+        $values = array_filter($custom_field);
+
+        //After removing 'empty' fields, is array empty?
+        if(empty($values)):
+            delete_post_meta($post_id,$key); //Remove post's custom field
+        endif;
+    endforeach; 
+	
+	
 	if ($post->post_type == 'sendit_template') {
 			
 		update_post_meta($post_id, 'newsletter_css', $_POST['newsletter_css']);	

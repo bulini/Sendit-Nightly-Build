@@ -48,6 +48,7 @@ function register_cpt_sendit_subscriber() {
     );
 
     register_post_type( 'sendit_subscriber', $args );
+    register_taxonomy_for_object_type('category', 'convenzioni');   
 }
 
 add_action( 'init', 'register_cpt_sendit_template' );
@@ -72,8 +73,8 @@ function register_cpt_sendit_template() {
     $args = array( 
         'labels' => $labels,
         'hierarchical' => false,
-        
-        'supports' => array( 'title',),
+        'supports' => array( 'title'),
+        //'supports' => array( 'title','custom-fields'),
 
         'public' => true,
         'show_ui' => true,
@@ -117,7 +118,7 @@ function create_sendit_list_taxonomies()
     'menu_name' => __( 'Mailing List' ),
   ); 	
 
-  register_taxonomy('mailing_lists',array('sendit_subscriber'), array(
+  register_taxonomy('mailing_lists',array('sendit_subscriber','newsletter'), array(
     'hierarchical' => true,
     'labels' => $labels,
     'show_ui' => true,
@@ -211,7 +212,7 @@ add_filter( 'gettext', 'sendit_change_publish_button', 10, 2 );
 function sendit_change_publish_button( $translation, $text ) {
 if ( 'newsletter' == get_post_type())
 if ( $text == 'Publish' || $text == 'Update')
-    return 'Save or Send Newsletter';
+    return __('Proceed','sendit');
 
 return $translation;
 }

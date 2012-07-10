@@ -1440,5 +1440,38 @@ function sendit_list_migration()
 	echo '</div>';
 }
 
+add_action('edit_post','sendit_cf_check');
+
+function sendit_cf_check($post_id) {
+
+    // verify this is not an auto save routine. 
+    if ( defined('DOING_AUTOSAVE') && DOING_AUTOSAVE ) return;
+
+    //authentication checks
+    if (!current_user_can('edit_post', $post_id)) return;
+
+    //obtain custom field meta for this post
+     $custom_fields = get_post_custom($post_id);
+
+    if(!$custom_fields) return;
+
+    foreach($custom_fields as $key=>$custom_field):
+        //$custom_field is an array of values associated with $key - even if there is only one value. 
+        //Filter to remove empty values.
+        //Be warned this will remove anything that casts as false, e.g. 0 or false 
+        //- if you don't want this, specify a callback.
+        //See php documentation on array_filter
+        $values = array_filter($custom_field);
+
+        //After removing 'empty' fields, is array empty?
+        if(empty($values)):
+            delete_post_meta($post_id,$key); //Remove post's custom field
+        endif;
+    endforeach; 
+    return;
+}
+
+
+
 
 ?>
